@@ -56,8 +56,8 @@ public class Camera {
         boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_A);
         boolean keyFast = Keyboard.isKeyDown(Keyboard.KEY_Q);
         boolean keySlow = Keyboard.isKeyDown(Keyboard.KEY_E);
-        boolean keyFlyUp = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-        boolean keyFlyDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+        //boolean keyFlyUp = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
+        //boolean keyFlyDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 
         float speed;
 
@@ -71,13 +71,14 @@ public class Camera {
 
         speed *= delta;
 
+        /*
         if (keyFlyUp) {
             pos.y += speed;
         }
         if (keyFlyDown) {
             pos.y -= speed;
         }
-
+		*/
         if (keyDown) {
             pos.x -= Math.sin(Math.toRadians(rotation.y)) * speed;
             pos.z += Math.cos(Math.toRadians(rotation.y)) * speed;

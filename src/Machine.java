@@ -22,8 +22,14 @@ public class Machine {
 
 	//Wall dimensions
 	public float height = 0.5f;
-	public float width = 2.0f;
-	public float length = 5.0f;
+	public float width = 5.0f;
+	public float length = 10.0f;
+	public float thickness = 0.1f;
+
+	//Flipper variable
+	public float flipRest = -length;
+	public float flipLToggle = flipRest;
+	public float flipRToggle = flipRest;
 
 	//Collection of surfaces w/ normal and length e.g. (normal x, normal z, len x, len z)
 	public ArrayList<Vector4f> surfs = new ArrayList<Vector4f>();
@@ -44,10 +50,30 @@ public class Machine {
 		surfs.add(new Vector4f(-1.0f, 0, 0, length*2));
 	}
 
-
+	public void flip(char c) {
+		//TODO: rotate flipper about y instead of moving points?
+		switch(c) {
+			case 'L':
+				flipLToggle = -length+size;
+				break;
+			case 'R':
+				flipRToggle = -length+size;
+				break;
+			case 'X':
+				flipLToggle = -length+size;
+				flipRToggle = -length+size;
+		}
+	}
+	
+	public void resetFlip() {
+		flipLToggle = flipRest;
+		flipRToggle = flipRest;
+	}
+	
 	public void draw() {
 		drawMachine();
-		drawBall();
+		//drawBall();
+		drawFlippers();
 	}
 
 	public void intersection() {
@@ -84,6 +110,43 @@ public class Machine {
 				temp*N.x, temp*N.y, temp*N.z);
 		vel.add(bounce, vel, vel);
 	}
+	
+	public void drawFlippers() {
+		GL11.glPushMatrix();
+		GL11.glBegin(GL11.GL_TRIANGLES);
+
+		GL11.glColor3f(1.0f, 1.0f, 0.0f);		
+		
+		//Left
+        GL11.glVertex3f(size, -height, flipLToggle);
+        GL11.glVertex3f(width/2, -height, -length-size);
+        GL11.glVertex3f(width/2, height, -length-size);
+
+        GL11.glVertex3f(size, -height, flipLToggle);
+        GL11.glVertex3f(width/2, -height, -length);
+        GL11.glVertex3f(width/2, height, -length);        
+        
+        GL11.glVertex3f(size, -height, flipLToggle);
+        GL11.glVertex3f(width/2, height, -length);
+        GL11.glVertex3f(width/2, height, -length-size);  
+        
+        //Right
+        GL11.glVertex3f(-size, -height, flipRToggle);
+        GL11.glVertex3f(-width/2, -height, -length-size);
+        GL11.glVertex3f(-width/2, height, -length-size);
+        
+        GL11.glVertex3f(-size, -height, flipRToggle);
+        GL11.glVertex3f(-width/2, -height, -length);
+        GL11.glVertex3f(-width/2, height, -length);        
+
+        GL11.glVertex3f(-size, -height, flipRToggle);
+        GL11.glVertex3f(-width/2, height, -length);
+        GL11.glVertex3f(-width/2, height, -length-size);  
+
+		GL11.glEnd();
+		GL11.glPopMatrix();
+	}
+	
 	public void drawMachine() {
 		GL11.glPushMatrix();
 
@@ -100,17 +163,23 @@ public class Machine {
 
         GL11.glColor3f(1.0f, 0.0f, 0.0f); //Make walls red
 
-        //Front
+        //Back
         GL11.glVertex3f(width, height, length);
         GL11.glVertex3f(-width, height, length);
         GL11.glVertex3f(-width, -height, length);
         GL11.glVertex3f(width, -height, length);
 
-        //Back
+        //Front Left
         GL11.glVertex3f(width, -height, -length);
-        GL11.glVertex3f(-width, -height, -length);
-        GL11.glVertex3f(-width, height, -length);
+        GL11.glVertex3f(width/2, -height, -length);
+        GL11.glVertex3f(width/2, height, -length);
         GL11.glVertex3f(width, height, -length);
+
+        //Front Right
+        GL11.glVertex3f(-width, -height, -length);
+        GL11.glVertex3f(-width/2, -height, -length);
+        GL11.glVertex3f(-width/2, height, -length);
+        GL11.glVertex3f(-width, height, -length);
 
         //Left
         GL11.glVertex3f(-width, height, length);
@@ -124,9 +193,7 @@ public class Machine {
         GL11.glVertex3f(width, -height, length);
         GL11.glVertex3f(width, -height, -length);
 
-
 		GL11.glEnd();
-
 		GL11.glPopMatrix();
 	}
 

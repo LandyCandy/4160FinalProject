@@ -49,6 +49,9 @@ public class InputExample {
 				if (Keyboard.getEventKey() == Keyboard.KEY_D) {
 				    System.out.println("D Key Pressed");
 				}
+				if ( Keyboard.getEventKey() == Keyboard.KEY_LSHIFT) {
+					System.out.println("Left Shift Key Pressed");
+				}
 			} else {
 		        if (Keyboard.getEventKey() == Keyboard.KEY_A) {
 				    System.out.println("A Key Released");

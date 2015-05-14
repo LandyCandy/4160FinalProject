@@ -138,8 +138,26 @@ public class PinBall {
             if (Keyboard.getEventKeyState()) {
                 if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE)
                     closeRequested = true;
+				if ( Keyboard.getEventKey() == Keyboard.KEY_LSHIFT) {
+					masheen.flip('L');
+				}
+				if ( Keyboard.getEventKey() == Keyboard.KEY_RSHIFT) {
+					masheen.flip('R');
+				}
+				if ( Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
+					masheen.flip('X');
+				}
                 else if (Keyboard.getEventKey() == Keyboard.KEY_P)
                     snapshot();
+            } else {
+		        if (Keyboard.getEventKey() == Keyboard.KEY_LSHIFT) {
+				    masheen.resetFlip();
+		        }
+		        if (Keyboard.getEventKey() == Keyboard.KEY_RSHIFT) {
+				    masheen.resetFlip();
+		        }if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
+				    masheen.resetFlip();
+		        }
             }
         }
 
