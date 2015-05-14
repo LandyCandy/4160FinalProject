@@ -3,6 +3,8 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
+import org.lwjgl.util.vector.Matrix3f;
+import org.lwjgl.util.vector.Matrix4f;
 
 import java.util.ArrayList;
 
@@ -10,10 +12,11 @@ public class Machine {
 	
 	//Ball's position
 	public Vector3f pos = new Vector3f(0.0f, 0.0f, 0.0f);
-
 	//Ball's velocity
-	public Vector3f vel = new Vector3f(0.0f, 0.0f, 0.1f);
-
+	public Vector3f vel = new Vector3f(0.01f, 0.0f, 0.1f);
+	//Ball's size
+	public float size = 0.5f;
+	
 	//Gravity constant (need to fine tune)
 	public static Vector3f g = new Vector3f(0.0f, 0.0f, -0.01f);
 
@@ -48,12 +51,39 @@ public class Machine {
 	}
 
 	public void intersection() {
+		Vector3f normal = new Vector3f();
+
 		for (Vector4f wall : surfs)	{
-			//TODO::Intersection detection and reflected vector calculation
+			//Front
+			if (pos.z < -length+size) {
+				normal.z = -1; 
+				bounce(normal);
+			//Back
+			} else if (pos.z > length-size) { 
+				normal.x = 1; 
+				bounce(normal);
+			//Left
+			} else if (pos.x > width-size) { 
+				normal.x = 1; 
+				bounce(normal);
+			//Right
+			} else if (pos.x < -width+size) { 
+				normal.x = -1; 
+				bounce(normal);
+			} 
+			
 			return;
 		}
 	}
 
+	public void bounce(Vector3f N){
+		//bounce formula v' = b * ( -2*(v dot N)*N + v )
+		//no scalar multiplication?
+		float temp = -2*Vector3f.dot(vel, N);
+		Vector3f bounce = new Vector3f(
+				temp*N.x, temp*N.y, temp*N.z);
+		vel.add(bounce, vel, vel);
+	}
 	public void drawMachine() {
 		GL11.glPushMatrix();
 
@@ -110,7 +140,7 @@ public class Machine {
 
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		Sphere s = new Sphere();
-		s.draw(0.5f, 20, 20);
+		s.draw(size, 20, 20);
 
 		GL11.glPopMatrix();
 	}

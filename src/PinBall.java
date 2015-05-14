@@ -39,6 +39,8 @@ public class PinBall {
             pollInput();
             updateLogic(getDelta());
             renderGL();
+            
+            masheen.intersection();
 
             Display.update();
         }
@@ -81,7 +83,6 @@ public class PinBall {
         // GL11.glTranslatef(0.0f, 0.0f, -20.0f); // Move Right And Into The Screen
         GLU.gluLookAt(0.0f, 15.0f, -20.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
         camera.apply();
-
         masheen.draw();
 
     }
