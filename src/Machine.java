@@ -158,9 +158,12 @@ public class Machine {
 
         GL11.glBegin(GL11.GL_LINES);
 
-		GL11.glColor4f(0.0f, 1.0f, 0.0f, 0.5f); //Make floor green
-
 		for (int i = 0; i <= 20; i+=2) {
+			float dist = pos.z - length + i;
+			dist *= dist;
+			float alpha = dist < 1.0f ? 1.0f : 0.5f;
+			GL11.glColor4f(0.0f, 1.0f, 0.0f, alpha); //Make floor green
+
 	        //Top
 	        GL11.glVertex3f(-width, height, length - i);
 	        GL11.glVertex3f(width, height, length - i);
@@ -171,9 +174,12 @@ public class Machine {
 
         }
 
-        GL11.glColor4f(1.0f, 0.0f, 0.0f, 0.3f); //Make walls red
-
         for (int i = 0; i <= 20; i+=2) {
+			float dist = pos.z - length + i;
+			dist *= dist;
+			float alpha = dist < 1.0f ? 1.0f : 0.3f;        	
+	        GL11.glColor4f(1.0f, 0.0f, 0.0f, alpha); //Make walls red
+
 	        //Left
 	        GL11.glVertex3f(-width, height, length - i);
 	        GL11.glVertex3f(-width, -height, length - i);
@@ -183,6 +189,9 @@ public class Machine {
 	        GL11.glVertex3f(width, height, length - i);
 
         }
+
+        GL11.glColor4f(1.0f, 0.0f, 0.0f, 0.3f); //Make walls red
+
 
         //Top Right Rail
         GL11.glVertex3f(-width, height, length);
