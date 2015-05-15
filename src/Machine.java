@@ -1,3 +1,5 @@
+import java.lang.Math;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 
 public class Machine {
 	
+	public boolean gameOn = true;
+
 	//Ball's position
 	public Vector3f pos = new Vector3f(0.0f, 0.0f, 0.0f);
 	//Ball's velocity
@@ -74,9 +78,16 @@ public class Machine {
 
 			Vector3f norm = new Vector3f(wall[0], wall[1], wall[2]);
 
-			//Front
+			//Front and paddle detection
 			if (pos.z < wall[3]+size && wall[3] < 0) {
+				if (pos.x > SW.x || pos.x < SE.x || pos.y > NW.y || pos.y < SW.y) {
+					gameOn = false;
+					vel.set(0, 0, 0);
+					return;
+				}
+				
 				bounce(norm);
+
 				return;
 			//Back
 			} else if (pos.z > wall[3]-size && wall[3] > 0) { 
@@ -121,21 +132,7 @@ public class Machine {
 		//Draw boundary walls of play field
 		GL11.glBegin(GL11.GL_QUADS);
 
-		GL11.glColor3f(0.0f, 1.0f, 0.0f); //Make floor green
-
-		//Floor
-        GL11.glVertex3f(width, -height, length);
-        GL11.glVertex3f(-width, -height, length);
-        GL11.glVertex3f(-width, -height, -length);
-        GL11.glVertex3f(width, -height, -length);
-
-        //Top
-        GL11.glVertex3f(width, height, length);
-        GL11.glVertex3f(-width, height, length);
-        GL11.glVertex3f(-width, height, -length);
-        GL11.glVertex3f(width, height, -length);
-
-        GL11.glColor3f(0.0f, 0.0f, 1.0f); //Make back blue
+        GL11.glColor4f(0.0f, 0.0f, 1.0f, 0.7f); //Make back blue
 
         //Back
         GL11.glVertex3f(width, height, length);
@@ -143,17 +140,48 @@ public class Machine {
         GL11.glVertex3f(-width, -height, length);
         GL11.glVertex3f(width, -height, length);
 
-        GL11.glColor3f(1.0f, 0.0f, 0.0f); //Make walls red
+        GL11.glEnd();
+        GL11.glBegin(GL11.GL_LINES);
 
-        //Left
+		GL11.glColor4f(0.0f, 1.0f, 0.0f, 0.5f); //Make floor green
+
+		for (int i = 0; i <= 20; i+=2) {
+	        //Top
+	        GL11.glVertex3f(-width, height, length - i);
+	        GL11.glVertex3f(width, height, length - i);
+	        
+	        //Bottom
+	        GL11.glVertex3f(width, -height, length - i);
+	        GL11.glVertex3f(-width, -height, length - i);
+
+        }
+
+        GL11.glColor4f(1.0f, 0.0f, 0.0f, 0.3f); //Make walls red
+
+        for (int i = 0; i <= 20; i+=2) {
+	        //Left
+	        GL11.glVertex3f(-width, height, length - i);
+	        GL11.glVertex3f(-width, -height, length - i);
+	        
+	        //Right
+	        GL11.glVertex3f(width, -height, length - i);
+	        GL11.glVertex3f(width, height, length - i);
+
+        }
+
+        //Top Right Rail
         GL11.glVertex3f(-width, height, length);
         GL11.glVertex3f(-width, height, -length);
+        
+        //Bottom Left Rail
         GL11.glVertex3f(-width, -height, -length);
         GL11.glVertex3f(-width, -height, length);
 
-        //Right
+        //Top Left Rail
         GL11.glVertex3f(width, height, -length);
         GL11.glVertex3f(width, height, length);
+
+        //Bottom Right Rail
         GL11.glVertex3f(width, -height, length);
         GL11.glVertex3f(width, -height, -length);
 
@@ -163,16 +191,24 @@ public class Machine {
 	public void movePanel(char in) {
 		switch(in) {
 			case 'U':
-				SW.y++; SE.y++; NE.y++; NW.y++;
+				if (NE.y + 0.1f > height)
+					return;
+				SW.y+=0.1f; SE.y+=0.1f; NE.y+=0.1f; NW.y+=0.1f;
 				break;
 			case 'D':
-				SW.y--; SE.y--; NE.y--; NW.y--;
+				if (SE.y - 0.1f < -height)
+					return;
+				SW.y-=0.1f; SE.y-=0.1f; NE.y-=0.1f; NW.y-=0.1f;
 				break;
 			case 'L':
-				SW.x++; SE.x++; NE.x++; NW.x++;
+				if (NW.x + 0.1f > width)
+					return;
+				SW.x+=0.1f; SE.x+=0.1f; NE.x+=0.1f; NW.x+=0.1f;
 				break;
 			case 'R':
-				SW.x--; SE.x--; NE.x--; NW.x--;
+				if (NE.x - 0.1f < -width)
+					return;
+				SW.x-=0.1f; SE.x-=0.1f; NE.x-=0.1f; NW.x-=0.1f;
 		}
 		
 	}
@@ -183,7 +219,7 @@ public class Machine {
 		//Draw boundary walls of play field
 		GL11.glBegin(GL11.GL_QUADS);
 
-		GL11.glColor3f(0.5f, 0.5f, 0.5f); 
+		GL11.glColor4f(0.5f, 0.5f, 0.5f, 0.8f); 
 
         GL11.glVertex3f(SW.x, SW.y, SW.z);
         GL11.glVertex3f(SE.x, SE.y, SE.z);
@@ -202,7 +238,11 @@ public class Machine {
 
 		GL11.glTranslatef(pos.x, pos.y, pos.z);
 
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		if (gameOn == true) {
+			GL11.glColor3f(0.2f, 0.2f, 0.2f);
+		} else {
+			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		}	
 		Sphere s = new Sphere();
 		s.draw(size, 20, 20);
 
@@ -213,6 +253,8 @@ public class Machine {
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
+		gameOn = true;
+		vel.set((float)Math.random()/10, (float)Math.random()/10, (float)Math.random()/3);
 	}
 
 }

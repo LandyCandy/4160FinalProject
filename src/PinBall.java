@@ -73,7 +73,7 @@ public class PinBall {
         float[] ambient = {0.0f, 0.0f, 0.0f, 1.0f};
         float[] diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
         float[] specular = {1.0f, 1.0f, 1.0f, 1.0f};
-        float[] position = {1.0f, 1.0f, 1.0f, 1.0f};
+        float[] position = {0.0f, 1.0f, 1.0f, 0.0f};
         
         GL11.glLight(GL11.GL_LIGHT0, GL11.GL_AMBIENT, (FloatBuffer)BufferUtils.createFloatBuffer(4).put(ambient).flip());
         GL11.glLight(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, (FloatBuffer)BufferUtils.createFloatBuffer(4).put(diffuse).flip());
@@ -85,6 +85,8 @@ public class PinBall {
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_LIGHT0);
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         camera.create();        
     }
@@ -110,22 +112,34 @@ public class PinBall {
      */
     public void pollInput() {
         camera.acceptInput(getDelta());
+
+        boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_UP);
+        boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_DOWN);
+        boolean keyRight = Keyboard.isKeyDown(Keyboard.KEY_RIGHT);
+        boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_LEFT);
         // scroll through key events
+        
+        if (keyUp) {
+            masheen.movePanel('U');
+        }
+        if (keyDown) {
+            masheen.movePanel('D');
+        } 
+        if (keyLeft) {
+            masheen.movePanel('L');
+        } 
+        if (keyRight) {
+            masheen.movePanel('R');
+        }
+
+
         while (Keyboard.next()) {
             if (Keyboard.getEventKeyState()) {
                 if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
                     closeRequested = true;
                 } else if (Keyboard.getEventKey() == Keyboard.KEY_P) {
                     snapshot();
-                } else if (Keyboard.getEventKey() == Keyboard.KEY_UP) {
-                	masheen.movePanel('U');
-                } else if (Keyboard.getEventKey() == Keyboard.KEY_DOWN) {
-                	masheen.movePanel('D');
-                } else if (Keyboard.getEventKey() == Keyboard.KEY_LEFT) {
-                	masheen.movePanel('L');
-                } else if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT) {
-                	masheen.movePanel('R');
-                }
+                } 
             } else {
                 if (Keyboard.getEventKey() == Keyboard.KEY_R) {
                     masheen.resetBall();
@@ -184,7 +198,7 @@ public class PinBall {
 
     private void createWindow() {
         try {
-            Display.setDisplayMode(new DisplayMode(640, 480));
+            Display.setDisplayMode(new DisplayMode(800, 600));
             Display.setVSyncEnabled(true);
             Display.setTitle(windowTitle);
             Display.create();
