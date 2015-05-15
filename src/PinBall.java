@@ -115,9 +115,16 @@ public class PinBall {
             if (Keyboard.getEventKeyState()) {
                 if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
                     closeRequested = true;
-                }
-                else if (Keyboard.getEventKey() == Keyboard.KEY_P) {
+                } else if (Keyboard.getEventKey() == Keyboard.KEY_P) {
                     snapshot();
+                } else if (Keyboard.getEventKey() == Keyboard.KEY_UP) {
+                	masheen.movePanel('U');
+                } else if (Keyboard.getEventKey() == Keyboard.KEY_DOWN) {
+                	masheen.movePanel('D');
+                } else if (Keyboard.getEventKey() == Keyboard.KEY_LEFT) {
+                	masheen.movePanel('L');
+                } else if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT) {
+                	masheen.movePanel('R');
                 }
             } else {
                 if (Keyboard.getEventKey() == Keyboard.KEY_R) {

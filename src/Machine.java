@@ -27,10 +27,11 @@ public class Machine {
 	public float length = 10.0f;
 	public float thickness = 0.1f;
 
-	//Flipper variable
-	public float flipRest = -length;
-	public float flipLToggle = flipRest;
-	public float flipRToggle = flipRest;
+	//Panel variables
+	public Vector3f SW = new Vector3f(width/2.0f, 0.0f, -length);        
+	public Vector3f SE = new Vector3f(0.0f, 0.0f, -length);        
+	public Vector3f NE = new Vector3f(0.0f, height/2.0f, -length);        
+	public Vector3f NW = new Vector3f(width/2.0f, height/2.0f, -length);        
 
 	//Collection of surfaces w/ normal and length e.g. (normal x, normal y, normal z, len x, len y, len z)
 	public ArrayList<float[]> surfs = new ArrayList<float[]>();
@@ -64,6 +65,7 @@ public class Machine {
 	public void draw() {
 		drawMachine();
 		drawBall();
+		drawPanel();
 	}
 
 	public void intersection() {
@@ -158,7 +160,40 @@ public class Machine {
 		GL11.glEnd();
 		GL11.glPopMatrix();
 	}
+	public void movePanel(char in) {
+		switch(in) {
+			case 'U':
+				SW.y++; SE.y++; NE.y++; NW.y++;
+				break;
+			case 'D':
+				SW.y--; SE.y--; NE.y--; NW.y--;
+				break;
+			case 'L':
+				SW.x++; SE.x++; NE.x++; NW.x++;
+				break;
+			case 'R':
+				SW.x--; SE.x--; NE.x--; NW.x--;
+		}
+		
+	}
+	
+	public void drawPanel() {
+		GL11.glPushMatrix();
 
+		//Draw boundary walls of play field
+		GL11.glBegin(GL11.GL_QUADS);
+
+		GL11.glColor3f(0.5f, 0.5f, 0.5f); 
+
+        GL11.glVertex3f(SW.x, SW.y, SW.z);
+        GL11.glVertex3f(SE.x, SE.y, SE.z);
+        GL11.glVertex3f(NE.x, NE.y, NE.z);
+        GL11.glVertex3f(NW.x, NW.y, NW.z);
+        
+		GL11.glEnd();
+		GL11.glPopMatrix();
+		
+	}
 	public void drawBall() {
 		GL11.glPushMatrix();
 
