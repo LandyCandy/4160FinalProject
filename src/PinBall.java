@@ -1,4 +1,5 @@
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.io.File;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
@@ -18,7 +19,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class PinBall {
 
-    String windowTitle = "Pinball";
+    String windowTitle = "Pong";
     public boolean closeRequested = false;
 
     long lastFrameTime; // used to calculate delta
@@ -67,6 +68,24 @@ public class PinBall {
         GL11.glEnable(GL11.GL_DEPTH_TEST); // Enables Depth Testing
         GL11.glDepthFunc(GL11.GL_LEQUAL); // The Type Of Depth Test To Do
         GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST); // Really Nice Perspective Calculations
+
+        //Light Source
+        float[] ambient = {0.0f, 0.0f, 0.0f, 1.0f};
+        float[] diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+        float[] specular = {1.0f, 1.0f, 1.0f, 1.0f};
+        float[] position = {1.0f, 1.0f, 1.0f, 1.0f};
+        
+        GL11.glLight(GL11.GL_LIGHT0, GL11.GL_AMBIENT, (FloatBuffer)BufferUtils.createFloatBuffer(4).put(ambient).flip());
+        GL11.glLight(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, (FloatBuffer)BufferUtils.createFloatBuffer(4).put(diffuse).flip());
+        GL11.glLight(GL11.GL_LIGHT0, GL11.GL_SPECULAR, (FloatBuffer)BufferUtils.createFloatBuffer(4).put(specular).flip());
+        GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, (FloatBuffer)BufferUtils.createFloatBuffer(4).put(position).flip());
+
+        GL11.glLightModeli(GL11.GL_LIGHT_MODEL_LOCAL_VIEWER, GL11.GL_TRUE);
+
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHT0);
+        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+
         camera.create();        
     }
     
@@ -80,7 +99,7 @@ public class PinBall {
 
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
         GL11.glLoadIdentity(); // Reset The View
-        GLU.gluLookAt(0.0f, 0.0f, -20.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        GLU.gluLookAt(0.0f, 0.0f, -22.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
         camera.apply();
         masheen.draw();
 
