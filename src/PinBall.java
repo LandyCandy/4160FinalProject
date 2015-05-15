@@ -41,7 +41,7 @@ public class PinBall {
             updateLogic(getDelta());
             renderGL();
             
-            if (masheen.gameOn) masheen.intersection();
+            if (masheen.gameOn == true) masheen.intersection();
 
             Display.update();
         }
@@ -101,7 +101,7 @@ public class PinBall {
 
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
         GL11.glLoadIdentity(); // Reset The View
-        GLU.gluLookAt(0.0f, 0.0f, -22.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        GLU.gluLookAt(0.0f, 0.0f, -25.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
         camera.apply();
         masheen.draw();
 
