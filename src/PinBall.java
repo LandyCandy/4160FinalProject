@@ -198,7 +198,7 @@ public class PinBall {
 
     private void createWindow() {
         try {
-            Display.setDisplayMode(new DisplayMode(800, 600));
+            Display.setDisplayMode(new DisplayMode(720, 600));
             Display.setVSyncEnabled(true);
             Display.setTitle(windowTitle);
             Display.create();

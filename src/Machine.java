@@ -141,6 +141,9 @@ public class Machine {
         GL11.glVertex3f(width, -height, length);
 
         GL11.glEnd();
+
+        GL11.glLineWidth(2.0f);
+
         GL11.glBegin(GL11.GL_LINES);
 
 		GL11.glColor4f(0.0f, 1.0f, 0.0f, 0.5f); //Make floor green
@@ -225,6 +228,21 @@ public class Machine {
         GL11.glVertex3f(SE.x, SE.y, SE.z);
         GL11.glVertex3f(NE.x, NE.y, NE.z);
         GL11.glVertex3f(NW.x, NW.y, NW.z);
+        
+		GL11.glEnd();
+
+		GL11.glBegin(GL11.GL_LINE_LOOP);
+
+		GL11.glColor3f(0.2f, 0.2f, 0.2f); 
+
+		//X Mark
+        GL11.glVertex3f(SW.x, SW.y, SW.z);
+        GL11.glVertex3f(NE.x, NE.y, NE.z);
+        
+        GL11.glVertex3f(SE.x, SE.y, SE.z);
+        GL11.glVertex3f(NW.x, NW.y, NW.z);
+
+
         
 		GL11.glEnd();
 		GL11.glPopMatrix();
