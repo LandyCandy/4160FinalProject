@@ -155,9 +155,13 @@ public class PinBall {
 		        }
 		        if (Keyboard.getEventKey() == Keyboard.KEY_RSHIFT) {
 				    masheen.resetFlip();
-		        }if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
+		        }
+                if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
 				    masheen.resetFlip();
 		        }
+                if (Keyboard.getEventKey() == Keyboard.KEY_R) {
+                    masheen.resetBall();
+                }
             }
         }
 

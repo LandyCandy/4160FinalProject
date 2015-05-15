@@ -13,12 +13,13 @@ public class Machine {
 	//Ball's position
 	public Vector3f pos = new Vector3f(0.0f, 0.0f, 0.0f);
 	//Ball's velocity
-	public Vector3f vel = new Vector3f(0.01f, 0.0f, 0.1f);
+	public Vector3f vel = new Vector3f(0.0f, 0.0f, 0.01f);
 	//Ball's size
 	public float size = 0.5f;
 	
-	//Gravity constant (need to fine tune)
-	public static Vector3f g = new Vector3f(0.0f, 0.0f, -0.01f);
+	//Gravity constant
+	public static Vector3f g = new Vector3f(0.0f, 0.0f, -0.001f);
+
 
 	//Wall dimensions
 	public float height = 0.5f;
@@ -38,16 +39,16 @@ public class Machine {
 		//Don't need to add floor surface since it is perpendicular to the plane of motion
 
 		//Add Front wall
-		surfs.add(new Vector4f(0, -1.0f, width*2, 0));
+		surfs.add(new Vector4f(0, -1.0f, -length, 0));
 
 		//Add Back wall
-		surfs.add(new Vector4f(0, 1.0f, width*2, 0));
+		surfs.add(new Vector4f(0, 1.0f, length, 0));
 
 		//Add Left wall
-		surfs.add(new Vector4f(1.0f, 0, 0, length*2));
+		surfs.add(new Vector4f(1.0f, 0, 0, -width));
 
 		//Add Right wall
-		surfs.add(new Vector4f(-1.0f, 0, 0, length*2));
+		surfs.add(new Vector4f(-1.0f, 0, 0, width));
 	}
 
 	public void flip(char c) {
@@ -72,43 +73,45 @@ public class Machine {
 	
 	public void draw() {
 		drawMachine();
-		//drawBall();
+		drawBall();
 		drawFlippers();
 	}
 
 	public void intersection() {
-		Vector3f normal = new Vector3f();
 
 		for (Vector4f wall : surfs)	{
+
+			Vector3f norm = new Vector3f(wall.x, 0.0f, wall.y);
+
 			//Front
-			if (pos.z < -length+size) {
-				normal.z = -1; 
-				bounce(normal);
+			if (pos.z < wall.z+size && wall.z < 0) {
+				bounce(norm);
+				return;
 			//Back
-			} else if (pos.z > length-size) { 
-				normal.x = 1; 
-				bounce(normal);
+			} else if (pos.z > wall.z-size && wall.z > 0) { 
+				bounce(norm);
+				return;
 			//Left
-			} else if (pos.x > width-size) { 
-				normal.x = 1; 
-				bounce(normal);
+			} else if (pos.x > wall.w-size && wall.w > 0) { 
+				bounce(norm);
+				return;
 			//Right
-			} else if (pos.x < -width+size) { 
-				normal.x = -1; 
-				bounce(normal);
-			} 
+			} else if (pos.x < wall.w+size && wall.w < 0) { 
+				bounce(norm);
+				return;
+			}
 			
-			return;
 		}
 	}
 
-	public void bounce(Vector3f N){
-		//bounce formula v' = b * ( -2*(v dot N)*N + v )
+	public void bounce(Vector3f n){
+		//bounce formula v' = 2*(vI dot N)*N - vI
 		//no scalar multiplication?
-		float temp = -2*Vector3f.dot(vel, N);
-		Vector3f bounce = new Vector3f(
-				temp*N.x, temp*N.y, temp*N.z);
-		vel.add(bounce, vel, vel);
+		Vector3f vI = new Vector3f();
+		vel.negate(vI);
+		float temp = 2*Vector3f.dot(vI, n);
+		Vector3f bounce = new Vector3f(temp*n.x, temp*n.y, temp*n.z);
+		vel.sub(bounce, vI, vel);
 	}
 	
 	public void drawFlippers() {
@@ -210,6 +213,12 @@ public class Machine {
 		s.draw(size, 20, 20);
 
 		GL11.glPopMatrix();
+	}
+
+	public void resetBall() {
+		pos.x = 0;
+		pos.y = 0;
+		pos.z = 0;
 	}
 
 }
