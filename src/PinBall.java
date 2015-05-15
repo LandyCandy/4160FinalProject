@@ -80,52 +80,10 @@ public class PinBall {
 
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
         GL11.glLoadIdentity(); // Reset The View
-        // GL11.glTranslatef(0.0f, 0.0f, -20.0f); // Move Right And Into The Screen
-        GLU.gluLookAt(0.0f, 15.0f, -20.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        GLU.gluLookAt(0.0f, 0.0f, -20.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
         camera.apply();
         masheen.draw();
 
-    }
-
-    public void drawCube() {
-
-        GL11.glBegin(GL11.GL_QUADS); // Start Drawing The Cube
-        GL11.glColor3f(0.0f, 1.0f, 0.0f); // Set The Color To Green
-        GL11.glVertex3f(1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Top)
-        GL11.glVertex3f(-1.0f, 1.0f, -1.0f); // Top Left Of The Quad (Top)
-        GL11.glVertex3f(-1.0f, 1.0f, 1.0f); // Bottom Left Of The Quad (Top)
-        GL11.glVertex3f(1.0f, 1.0f, 1.0f); // Bottom Right Of The Quad (Top)
-
-        GL11.glColor3f(1.0f, 0.5f, 0.0f); // Set The Color To Orange
-        GL11.glVertex3f(1.0f, -1.0f, 1.0f); // Top Right Of The Quad (Bottom)
-        GL11.glVertex3f(-1.0f, -1.0f, 1.0f); // Top Left Of The Quad (Bottom)
-        GL11.glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom Left Of The Quad (Bottom)
-        GL11.glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad (Bottom)
-
-        GL11.glColor3f(1.0f, 0.0f, 0.0f); // Set The Color To Red
-        GL11.glVertex3f(1.0f, 1.0f, 1.0f); // Top Right Of The Quad (Front)
-        GL11.glVertex3f(-1.0f, 1.0f, 1.0f); // Top Left Of The Quad (Front)
-        GL11.glVertex3f(-1.0f, -1.0f, 1.0f); // Bottom Left Of The Quad (Front)
-        GL11.glVertex3f(1.0f, -1.0f, 1.0f); // Bottom Right Of The Quad (Front)
-
-        GL11.glColor3f(1.0f, 1.0f, 0.0f); // Set The Color To Yellow
-        GL11.glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Left Of The Quad (Back)
-        GL11.glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad (Back)
-        GL11.glVertex3f(-1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Back)
-        GL11.glVertex3f(1.0f, 1.0f, -1.0f); // Top Left Of The Quad (Back)
-
-        GL11.glColor3f(0.0f, 0.0f, 1.0f); // Set The Color To Blue
-        GL11.glVertex3f(-1.0f, 1.0f, 1.0f); // Top Right Of The Quad (Left)
-        GL11.glVertex3f(-1.0f, 1.0f, -1.0f); // Top Left Of The Quad (Left)
-        GL11.glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom Left Of The Quad (Left)
-        GL11.glVertex3f(-1.0f, -1.0f, 1.0f); // Bottom Right Of The Quad (Left)
-
-        GL11.glColor3f(1.0f, 0.0f, 1.0f); // Set The Color To Violet
-        GL11.glVertex3f(1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Right)
-        GL11.glVertex3f(1.0f, 1.0f, 1.0f); // Top Left Of The Quad (Right)
-        GL11.glVertex3f(1.0f, -1.0f, 1.0f); // Bottom Left Of The Quad (Right)
-        GL11.glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad (Right)
-        GL11.glEnd(); // Done Drawing The Quad
     }
 
     /**
@@ -136,29 +94,13 @@ public class PinBall {
         // scroll through key events
         while (Keyboard.next()) {
             if (Keyboard.getEventKeyState()) {
-                if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE)
+                if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
                     closeRequested = true;
-				if ( Keyboard.getEventKey() == Keyboard.KEY_LSHIFT) {
-					masheen.flip('L');
-				}
-				if ( Keyboard.getEventKey() == Keyboard.KEY_RSHIFT) {
-					masheen.flip('R');
-				}
-				if ( Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
-					masheen.flip('X');
-				}
-                else if (Keyboard.getEventKey() == Keyboard.KEY_P)
+                }
+                else if (Keyboard.getEventKey() == Keyboard.KEY_P) {
                     snapshot();
+                }
             } else {
-		        if (Keyboard.getEventKey() == Keyboard.KEY_LSHIFT) {
-				    masheen.resetFlip();
-		        }
-		        if (Keyboard.getEventKey() == Keyboard.KEY_RSHIFT) {
-				    masheen.resetFlip();
-		        }
-                if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
-				    masheen.resetFlip();
-		        }
                 if (Keyboard.getEventKey() == Keyboard.KEY_R) {
                     masheen.resetBall();
                 }
