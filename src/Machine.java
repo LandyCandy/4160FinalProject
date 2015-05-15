@@ -13,16 +13,16 @@ public class Machine {
 	//Ball's position
 	public Vector3f pos = new Vector3f(0.0f, 0.0f, 0.0f);
 	//Ball's velocity
-	public Vector3f vel = new Vector3f(0.0f, 0.0f, 0.01f);
+	public Vector3f vel = new Vector3f(0.1f, 0.1f, 0.1f);
 	//Ball's size
 	public float size = 0.5f;
 	
 	//Gravity constant
-	public static Vector3f g = new Vector3f(0.0f, 0.0f, -0.001f);
+	public static Vector3f g = new Vector3f(0.0f, 0.0f, 0.0f);
 
 
 	//Wall dimensions
-	public float height = 0.5f;
+	public float height = 5.0f;
 	public float width = 5.0f;
 	public float length = 10.0f;
 	public float thickness = 0.1f;
@@ -32,23 +32,33 @@ public class Machine {
 	public float flipLToggle = flipRest;
 	public float flipRToggle = flipRest;
 
-	//Collection of surfaces w/ normal and length e.g. (normal x, normal z, len x, len z)
-	public ArrayList<Vector4f> surfs = new ArrayList<Vector4f>();
+	//Collection of surfaces w/ normal and length e.g. (normal x, normal y, normal z, len x, len y, len z)
+	public ArrayList<float[]> surfs = new ArrayList<float[]>();
 
 	public Machine() {
-		//Don't need to add floor surface since it is perpendicular to the plane of motion
-
 		//Add Front wall
-		surfs.add(new Vector4f(0, -1.0f, -length, 0));
+		float [] front = {0, 0, -1.0f, -length, 0, 0};
+		surfs.add(front);
 
 		//Add Back wall
-		surfs.add(new Vector4f(0, 1.0f, length, 0));
+		float [] back = {0, 0, 1.0f, length, 0, 0};
+		surfs.add(back);
 
 		//Add Left wall
-		surfs.add(new Vector4f(1.0f, 0, 0, -width));
+		float [] left = {1.0f, 0, 0, 0, 0, -width};
+		surfs.add(left);
 
 		//Add Right wall
-		surfs.add(new Vector4f(-1.0f, 0, 0, width));
+		float [] right = {-1.0f, 0 ,0, 0, 0, width};
+		surfs.add(right);
+
+		//Add Bottom Wall
+		float [] bottom = {0, 1.0f, 0, 0, -height, 0};
+		surfs.add(bottom);
+
+		//Add Top wall
+		float [] top = {0, -1.0f, 0, 0, height, 0};
+		surfs.add(top);
 	}
 
 	public void flip(char c) {
@@ -74,29 +84,37 @@ public class Machine {
 	public void draw() {
 		drawMachine();
 		drawBall();
-		drawFlippers();
+		// drawFlippers();
 	}
 
 	public void intersection() {
 
-		for (Vector4f wall : surfs)	{
+		for (float[] wall : surfs)	{
 
-			Vector3f norm = new Vector3f(wall.x, 0.0f, wall.y);
+			Vector3f norm = new Vector3f(wall[0], wall[1], wall[2]);
 
 			//Front
-			if (pos.z < wall.z+size && wall.z < 0) {
+			if (pos.z < wall[3]+size && wall[3] < 0) {
 				bounce(norm);
 				return;
 			//Back
-			} else if (pos.z > wall.z-size && wall.z > 0) { 
+			} else if (pos.z > wall[3]-size && wall[3] > 0) { 
 				bounce(norm);
 				return;
 			//Left
-			} else if (pos.x > wall.w-size && wall.w > 0) { 
+			} else if (pos.x > wall[5]-size && wall[5] > 0) { 
 				bounce(norm);
 				return;
 			//Right
-			} else if (pos.x < wall.w+size && wall.w < 0) { 
+			} else if (pos.x < wall[5]+size && wall[5] < 0) { 
+				bounce(norm);
+				return;
+			//Bottom	
+			} else if (pos.y < wall[4]+size && wall[4] < 0) {
+				bounce(norm);
+				return;
+			//Top	
+			} else if (pos.y > wall[4]-size && wall[4] > 0) {
 				bounce(norm);
 				return;
 			}
@@ -164,6 +182,12 @@ public class Machine {
         GL11.glVertex3f(-width, -height, -length);
         GL11.glVertex3f(width, -height, -length);
 
+        //Top
+        GL11.glVertex3f(width, height, length);
+        GL11.glVertex3f(-width, height, length);
+        GL11.glVertex3f(-width, height, -length);
+        GL11.glVertex3f(width, height, -length);
+
         GL11.glColor3f(1.0f, 0.0f, 0.0f); //Make walls red
 
         //Back
@@ -171,18 +195,6 @@ public class Machine {
         GL11.glVertex3f(-width, height, length);
         GL11.glVertex3f(-width, -height, length);
         GL11.glVertex3f(width, -height, length);
-
-        //Front Left
-        GL11.glVertex3f(width, -height, -length);
-        GL11.glVertex3f(width/2, -height, -length);
-        GL11.glVertex3f(width/2, height, -length);
-        GL11.glVertex3f(width, height, -length);
-
-        //Front Right
-        GL11.glVertex3f(-width, -height, -length);
-        GL11.glVertex3f(-width/2, -height, -length);
-        GL11.glVertex3f(-width/2, height, -length);
-        GL11.glVertex3f(-width, height, -length);
 
         //Left
         GL11.glVertex3f(-width, height, length);
