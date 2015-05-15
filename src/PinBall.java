@@ -41,7 +41,7 @@ public class PinBall {
             updateLogic(getDelta());
             renderGL();
             
-            masheen.intersection();
+            if (masheen.gameOn) masheen.intersection();
 
             Display.update();
         }

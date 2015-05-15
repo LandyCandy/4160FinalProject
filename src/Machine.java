@@ -24,7 +24,6 @@ public class Machine {
 	//Gravity constant
 	public static Vector3f g = new Vector3f(0.0f, 0.0f, 0.0f);
 
-
 	//Wall dimensions
 	public float height = 5.0f;
 	public float width = 5.0f;
@@ -39,7 +38,11 @@ public class Machine {
 
 	//Collection of surfaces w/ normal and length e.g. (normal x, normal y, normal z, len x, len y, len z)
 	public ArrayList<float[]> surfs = new ArrayList<float[]>();
-
+	
+	//Scoring
+	public int score = 0;
+	public int highScore = 0;
+	
 	public Machine() {
 		//Add Front wall
 		float [] front = {0, 0, -1.0f, -length, 0, 0};
@@ -81,12 +84,21 @@ public class Machine {
 			//Front and paddle detection
 			if (pos.z < wall[3]+size && wall[3] < 0) {
 				if (pos.x > SW.x || pos.x < SE.x || pos.y > NW.y || pos.y < SW.y) {
-					gameOn = false;
 					vel.set(0, 0, 0);
+					
+					if (score > highScore) highScore = score;
+					score = 0;
+					
+					System.out.println("You Lose!");
+					System.out.println("High Score: "+highScore+'\n');
+					
+					gameOn = false;
 					return;
 				}
 				
 				bounce(norm);
+				score += 10;
+				if (gameOn) System.out.println("Score: "+score);
 
 				return;
 			//Back
@@ -191,6 +203,7 @@ public class Machine {
 		GL11.glEnd();
 		GL11.glPopMatrix();
 	}
+	
 	public void movePanel(char in) {
 		switch(in) {
 			case 'U':
@@ -248,6 +261,7 @@ public class Machine {
 		GL11.glPopMatrix();
 		
 	}
+	
 	public void drawBall() {
 		GL11.glPushMatrix();
 
@@ -271,6 +285,9 @@ public class Machine {
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
+		
+		score = 0;
+		
 		gameOn = true;
 		vel.set((float)Math.random()/10, (float)Math.random()/10, (float)Math.random()/3);
 	}
